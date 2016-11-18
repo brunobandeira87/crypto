@@ -26,6 +26,7 @@ public class Teste {
 		
 		SpreadSpectrum spreadSpectrum = new SpreadSpectrum(image, alpha, windowSize);
 		spreadSpectrum.run();
+		PDI.salvaImagem(path + "lena_dct.jpg", spreadSpectrum.getResultImage());
 	}
 	
 	public static void patchwork(double[][] image, String path){
