@@ -14,7 +14,8 @@ public class Patchwork {
 		this.hostImage 	= 	hostImage;
 		this.delta 		= 	delta;
 		this.windowSize	=	windowSize;
-		this.subsets	= new int[2][this.windowSize];
+		this.subsets	= 	new int[2][this.windowSize];
+		
 	}
 	
 	public double[][] getResultImage(){
