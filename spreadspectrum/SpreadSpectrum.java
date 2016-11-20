@@ -4,7 +4,13 @@ import java.util.Random;
 public class SpreadSpectrum {
 	private double[][] hostImage;
 	private double[][] frequencyImage;
-	private double[][] resultImage;
+	private double[][] resultImage;/*
+	for (int i = 0; i < this.resultImage.length; i++) {
+	for (int j = 0; j < this.resultImage[0].length; j++) {
+		System.out.println(this.resultImage[i][j]);
+	}
+}
+*/
 	private double[] mark;
 	private double[] coeficients;
 	private double alpha;
@@ -23,7 +29,13 @@ public class SpreadSpectrum {
 		double temp; 
 		this.mark =	new double[this.windowSize];
 		for (int i = 0; i < this.mark.length; i++) {
-			temp	= r.nextGaussian();
+			temp	= r.nextGaussian();/*
+		for (int i = 0; i < this.resultImage.length; i++) {
+			for (int j = 0; j < this.resultImage[0].length; j++) {
+				System.out.println(this.resultImage[i][j]);
+			}
+		}
+		*/
 			this.mark[i] = (temp > 0) ? 1 : 0;
 			
 			//System.out.println(mark[i]);
@@ -112,7 +124,8 @@ public class SpreadSpectrum {
 		double b2 = Math.sqrt((double)2/n);
 		System.out.println("DCT BEGIN!");
 		for (int i = 0; i < m; i++) {
-			System.out.println("current Progress: " + ((int) i * m / total ) * 100 +"%") ;
+			if(i % 10 == 0)
+				System.out.println("current Progress: " + ((double) i * m / total ) * 100 +"%") ;
 			for (int j = 0; j < n; j++) {
 				a = (i == 0) ? a1 : a2;
 				b = (j == 0) ? b1 : b2;
@@ -152,17 +165,18 @@ public class SpreadSpectrum {
 		int total = n * m;
 		
 		for (int i = 0; i < m; i++) {
-			System.out.println("current Progress: " + ((int) i * m / total ) * 100 +"%") ;
+			if(i % 10 == 0)
+				System.out.println("current Progress: " + ((double) i * m / total ) * 100 +"%") ;
 			for (int j = 0; j < n; j++) {
 				
 				double sum = 0;
 				for (int k = 0; k < m; k++) {
 					for (int l = 0; l < n; l++) {
-						a = (i == 0) ? a1 : a2;
-						b = (j == 0) ? b1 : b2;
+						a = (k == 0) ? a1 : a2;
+						b = (l == 0) ? b1 : b2;
 						double parcela1 = Math.cos(Math.PI * ((double) (2 * i + 1) * k) / (2 * m));
 						double parcela2 = Math.cos(Math.PI * ((double) (2 * j + 1) * l) / (2 * n));
-						sum += (this.hostImage[k][l] * parcela1 * parcela2);
+						sum += (this.frequencyImage[k][l] * parcela1 * parcela2) * a * b;
 					}
 					
 				}
@@ -172,7 +186,7 @@ public class SpreadSpectrum {
 //				double parcela2 = Math.cos((Math.PI * (double) (2 * j + 1) * j) / 2 * n);
 //				this.frequencyImage[i][j] = a * b * (this.hostImage[i][j] * parcela1 * parcela2);
 //				this.frequencyImage[i][j] = a * b * (this.hostImage[i][j] * ((Math.cos((Math.PI * (double) (2 * i + 1) * i) / 2 * m)) * (Math.cos((Math.PI * (double) (2 * j + 1) * j) / 2 * n))));
-				System.out.println(this.resultImage[i][j]);
+				
 			}
 		}
 		
@@ -203,21 +217,19 @@ public class SpreadSpectrum {
 		double[] linearFrequency = linearImage(this.frequencyImage);
 		double[] markedFrequency = new double[this.windowSize];
 		int[] largestIndexes = getNthLargeElementsIndexes(linearFrequency);
-		System.out.println("oi");
+		double temp  = 0;
 		for (int i = 0; i < largestIndexes.length; i++) {
-			linearFrequency[largestIndexes[i]] *= (1 + this.alpha * this.mark[i]); 
+			temp = linearFrequency[largestIndexes[i]] * (1 + this.alpha * this.mark[i]);
+			System.out.println(temp);
+			linearFrequency[largestIndexes[i]] = temp;
+//			linearFrequency[largestIndexes[i]] *= (1 + this.alpha * this.mark[i]);
 		}
 		this.frequencyImage = unvetorizeImage(linearFrequency, this.frequencyImage.length, this.frequencyImage[0].length);
 		System.out.println("IDCT Begins");
 		idct();
 		System.out.println("IDCT Ends");
-		/*
-		for (int i = 0; i < this.resultImage.length; i++) {
-			for (int j = 0; j < this.resultImage[0].length; j++) {
-				System.out.println(this.resultImage[i][j]);
-			}
-		}
-		*/
+		
 	}
+
 	
 }
