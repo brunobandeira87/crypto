@@ -91,10 +91,12 @@ public class PDI {
 		return retorno;
 	}
 
-	public static void salvaImagem(String caminho, double[][] imagem) {
+	public static void salvaImagem(String caminho, double[][] imagem, String filetype) {
 		BufferedImage image = new BufferedImage(imagem[0].length,
 				imagem.length, BufferedImage.TYPE_BYTE_GRAY);
-
+		if(filetype == null){
+			filetype = "jpg";
+		}
 		for (int y = 0; y < imagem.length; ++y) {
 			for (int x = 0; x < imagem[0].length; ++x) {
 				double[] tmp = new double[] { imagem[y][x] };
@@ -103,7 +105,7 @@ public class PDI {
 		}
 
 		try {
-			ImageIO.write(image, "jpg", new File(caminho));
+			ImageIO.write(image, filetype, new File(caminho));
 		} catch (IOException e) {
 			throw new RuntimeException(
 					"Erro ao tentar escrever no arquivo. CAUSE: "
